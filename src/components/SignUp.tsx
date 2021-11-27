@@ -1,10 +1,7 @@
-import { Form, Input, Space, message, Button } from "antd";
-import api from "../utils/api";
+import { Form, Input, Button } from "antd";
 import { useHistory } from "react-router-dom";
-
-const showError = (errorMessage: string) => {
-    message.error(errorMessage);
-};
+import api from "../utils/api";
+import showError from "../utils/showError";
 
 function SignUp() {
     const layout = {
@@ -28,14 +25,13 @@ function SignUp() {
         try {
             const response = await api.post("/users/register", values);
             console.log(response);
-            history.push("/login");
+            history.push("/login", { newSignUp: true });
         } catch (error) {
             console.log(error);
             showError((error as any).response.data.errorMessage);
         }
     };
     return (
-        // Center the form
         <Form
             {...layout}
             name="nest-messages"
