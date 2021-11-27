@@ -1,26 +1,39 @@
 import { Form, Input, Button, Result } from "antd";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import api from "../utils/api";
+import { AppState } from "../store";
+import { login } from "../store/actions/userActions";
+import { LoginForm } from "../types/user";
 import showError from "../utils/showError";
+import showSuccess from "../utils/showSuccess";
+
 function Login() {
-    const history = useHistory();
     const location = useLocation<{ newSignUp?: boolean }>();
-    const onFinish = async (values: any) => {
-        console.log("Success:", values);
-        try {
-            const response = await api.post("/users/login", values);
-            console.log(response);
-            history.push("/");
-        } catch (error) {
-            console.log(error);
-            showError((error as any).response.data.errorMessage);
-        }
+    const dispatch = useDispatch();
+    const { data, loading, error } = useSelector(
+        (state: AppState) => state.user
+    );
+    const history = useHistory();
+
+    const onFinish = (values: LoginForm) => {
+        dispatch(login(values));
     };
 
-    const onFinishFailed = (errorInfo: any) => {
-        console.log("Failed:", errorInfo);
-        showError(errorInfo);
-    };
+    useEffect(() => {
+        error && showError(error);
+    }, [error]);
+
+    useEffect(() => {
+        data.username && showSuccess("You have successfully logged in!");
+    }, [data.username]);
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            history.push("/");
+        }
+    }, [data]);
+
     return (
         <Form
             name="basic"
@@ -28,7 +41,7 @@ function Login() {
             wrapperCol={{ span: 16 }}
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            // onFinishFailed={onFinishFailed}
             autoComplete="off"
             style={{ margin: "auto", width: "50%" }}
         >
