@@ -1,10 +1,16 @@
-import { Button, Form, Input, Modal, Select, Table, Tag } from "antd";
+import { Button, Form, Input, Modal, Select, Space, Table, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../store";
-import { addCategory, getCategories } from "../store/actions/categoryActions";
+import {
+    addCategory,
+    deleteCategory,
+    getCategories,
+    updateCategory,
+} from "../store/actions/categoryActions";
 import { Category, CategoryForm } from "../types/category";
-import { CirclePicker, GithubPicker, SketchPicker } from "react-color";
+import { CirclePicker } from "react-color";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 type Mode = "create" | "update";
 
@@ -21,6 +27,7 @@ function Categories() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [mode, setMode] = useState<Mode>("create");
     const [form, setForm] = useState<CategoryForm>(emptyForm);
+    const [id, setId] = useState<number | null>(null);
 
     const showModal = (mode: Mode) => {
         setIsModalVisible(true);
@@ -28,16 +35,22 @@ function Categories() {
     };
 
     const handleOk = () => {
-        dispatch(addCategory(form));
+        if (mode === "create") {
+            dispatch(addCategory(form));
+        } else if (mode === "update" && typeof id === "number") {
+            dispatch(updateCategory(id, form));
+        }
         setIsModalVisible(false);
         setMode("create");
         setForm(emptyForm);
+        setId(null);
     };
 
     const handleCancel = () => {
         setIsModalVisible(false);
         setMode("create");
         setForm(emptyForm);
+        setId(null);
     };
 
     const columns = [
@@ -55,16 +68,28 @@ function Categories() {
             },
         },
 
-        /*         {
+        {
             title: "Action",
             key: "action",
-            render: (text, record) => (
+            render: (text: string, category: Category) => (
                 <Space size="middle">
-                    <a>Invite {record.name}</a>
-                    <a>Delete</a>
+                    <EditOutlined
+                        style={{ color: "blue" }}
+                        onClick={() => {
+                            showModal("update");
+                            setForm(category);
+                            setId(category.id);
+                        }}
+                    />
+                    <DeleteOutlined
+                        style={{ color: "red" }}
+                        onClick={() => {
+                            dispatch(deleteCategory(category.id));
+                        }}
+                    />
                 </Space>
             ),
-        }, */
+        },
     ];
 
     const dispatch = useDispatch();
@@ -75,9 +100,17 @@ function Categories() {
     return (
         <React.Fragment>
             <div>
-                <Button type="primary" onClick={() => showModal("create")}>
-                    Add Category
-                </Button>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginBottom: "10px",
+                    }}
+                >
+                    <Button type="primary" onClick={() => showModal("create")}>
+                        Add Category
+                    </Button>
+                </div>
                 <Modal
                     title={
                         mode === "create" ? "Add Category" : "Update Category"
@@ -113,6 +146,7 @@ function Categories() {
                         <Form.Item label="Category Type">
                             <Select
                                 defaultValue="expense"
+                                value={form.type}
                                 onChange={(type) => {
                                     setForm({
                                         ...form,
@@ -143,7 +177,7 @@ function Categories() {
                 </Modal>
             </div>
 
-            <Table columns={columns} dataSource={data} />
+            <Table loading={loading} columns={columns} dataSource={data} />
         </React.Fragment>
     );
 }

@@ -21,3 +21,29 @@ export const addCategory =
             dispatch({ type: "ADD_CATEGORY_ERROR" });
         }
     };
+
+export const updateCategory =
+    (id: number, form: Partial<CategoryForm>) =>
+    async (dispatch: CategoryDispatch) => {
+        dispatch({ type: "UPDATE_CATEGORY_START" });
+        try {
+            const response = await api.put<Category>(`/categories/${id}`, form);
+            dispatch({
+                type: "UPDATE_CATEGORY_SUCCESS",
+                payload: response.data,
+            });
+        } catch (error) {
+            dispatch({ type: "UPDATE_CATEGORY_ERROR" });
+        }
+    };
+
+export const deleteCategory =
+    (id: number) => async (dispatch: CategoryDispatch) => {
+        dispatch({ type: "DELETE_CATEGORY_START" });
+        try {
+            await api.delete(`/categories/${id}`);
+            dispatch({ type: "DELETE_CATEGORY_SUCCESS", payload: id });
+        } catch (error) {
+            dispatch({ type: "DELETE_CATEGORY_ERROR" });
+        }
+    };
