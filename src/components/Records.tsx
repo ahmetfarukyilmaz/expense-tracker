@@ -4,6 +4,7 @@ import form from "antd/lib/form";
 import React, { useEffect, useState } from "react";
 import { CirclePicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router";
 import { AppState } from "../store";
 import { getCategories } from "../store/actions/categoryActions";
 import {
@@ -229,7 +230,13 @@ function Records() {
                     </Form>
                 </Modal>
             </div>
-            <Table loading={loading} columns={columns} dataSource={data} />;
+            <Table
+                loading={loading}
+                columns={columns}
+                dataSource={data}
+                rowKey="id"
+            />
+            ;
         </React.Fragment>
     );
 }

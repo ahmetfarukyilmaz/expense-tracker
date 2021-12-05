@@ -30,7 +30,7 @@ function Login() {
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
-            history.push("/");
+            history.push("/records");
         }
     }, [data]);
 

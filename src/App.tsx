@@ -6,42 +6,22 @@ import SignUp from "./components/SignUp";
 import PrivateRoute from "./components/PrivateRoute";
 import Categories from "./components/Categories";
 import Records from "./components/Records";
+import AppHeader from "./components/AppHeader";
+import Logout from "./components/Logout";
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 
 function App() {
     return (
         <Layout>
-            <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
-                <div className="logo" />
-                <Menu
-                    theme="dark"
-                    mode="horizontal"
-                    defaultSelectedKeys={["1"]}
-                >
-                    <Menu.Item key="1">
-                        <a href="/login">Login</a>
-                    </Menu.Item>
-
-                    <Menu.Item key="2">
-                        <a href="/register">Sign Up</a>
-                    </Menu.Item>
-
-                    <Menu.Item key="3">
-                        <a href="/categories">Categories</a>
-                    </Menu.Item>
-
-                    <Menu.Item key="4">
-                        <a href="/records">Records</a>
-                    </Menu.Item>
-                </Menu>
-            </Header>
+            <AppHeader />
             <Content
                 className="site-layout"
                 style={{ padding: "50px", marginTop: 64 }}
             >
                 <Route path="/register" component={SignUp} />
                 <Route path="/login" component={Login} />
+                <Route path="/logout" component={Logout} />
                 <PrivateRoute path="/categories" component={Categories} />
                 <PrivateRoute path="/records" component={Records} />
             </Content>
