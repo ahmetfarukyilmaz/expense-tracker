@@ -11,8 +11,7 @@ import {
 import { Category, CategoryForm } from "../types/category";
 import { CirclePicker } from "react-color";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-
-type Mode = "create" | "update";
+import { Mode } from "../types/general";
 
 const emptyForm: CategoryForm = {
     name: "",
