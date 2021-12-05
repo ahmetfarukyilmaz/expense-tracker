@@ -23,7 +23,7 @@ function SignUp() {
 
     const onFinish = async (values: any) => {
         try {
-            const response = await api.post("/users/register", values);
+            const response = await api().post("/users/register", values);
             console.log(response);
             history.push("/login", { newSignUp: true });
         } catch (error) {

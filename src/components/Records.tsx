@@ -1,10 +1,7 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Select, Space, Table, Tag } from "antd";
-import form from "antd/lib/form";
 import React, { useEffect, useState } from "react";
-import { CirclePicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router";
 import { AppState } from "../store";
 import { getCategories } from "../store/actions/categoryActions";
 import {
